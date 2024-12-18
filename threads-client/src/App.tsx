@@ -1,6 +1,10 @@
+import RouteConfig from "@/routes/RouteConfig"
+
 function App() {
   return (
-    <div >App</div>
+    <>
+      <RouteConfig />
+    </>
   )
 }
 
