@@ -1,11 +1,13 @@
-import React from 'react'
+import { NewPostThread,ThreadsPosts } from "@/components";
 
 const Home = () => {
   return (
-    <div>
-      <div>Input</div>
-      <div>Post</div>
-      <div></div>
+    <div className="flex flex-col justify-center items-center ">
+      <div  className="w-10/12 shadow-sm shadow-gray-200 rounded-md">
+        <NewPostThread />
+        <ThreadsPosts />
+      </div>
+      
     </div>
   )
 }
