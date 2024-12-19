@@ -18,3 +18,7 @@ export const MenuPageRoute = routePathSetter('/menu','menu',MenuIcon)
 // authRoutes
 export const LoginPageRoute = routePathSetter('/login','login')
 export const registerRoute = routePathSetter('/register','register')
+
+export const threadsRoute = routePathSetter('/threads','threads')
+export const repliesRoute = routePathSetter('/replies','replies')
+export const repostRoute = routePathSetter('/repost','repost')
