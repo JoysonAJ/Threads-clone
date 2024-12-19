@@ -8,7 +8,7 @@ import {
   ProfileIcon
 } from "@/routes/routes.icons";
 
-export const HomePageRoute = routePathSetter("/home", "home",HomeIcon);
+export const HomePageRoute = routePathSetter("/", "home",HomeIcon);
 export const ProfilePageRoute = routePathSetter("/profile", "profile",ProfileIcon);
 export const SearchPageRoute = routePathSetter("/search", "search",SearchIcon);
 

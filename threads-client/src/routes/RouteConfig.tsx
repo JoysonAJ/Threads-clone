@@ -1,7 +1,7 @@
 // import { BrowserRouter } from "react-router-dom"
 import Layout from "@/layout";
 import AuthLayout from "@/layout/AuthLayout";
-import { Home, Profile, Search, Menu } from "@/pages";
+import { Home, Profile, Search, Menu, Login, Register } from "@/pages";
 import { BrowserRouter, Routes, Route } from "react-router";
 import {
   HomePageRoute,
@@ -22,11 +22,13 @@ const RouteConfig = () => {
           <Route path={SearchPageRoute.navigateTo} element={<Search />} />
 
           <Route path={MenuPageRoute.navigateTo} element={<Menu />} />
-          <Route path="" element={<AuthLayout />}>
-            <Route path={registerRoute.navigateTo} element={<Menu />} />
-            <Route path={LoginPageRoute.navigateTo} element={<Menu />} />
-          </Route>
+
         </Route>
+        <Route path="" element={<AuthLayout />}>
+          <Route path={registerRoute.navigateTo} element={<Register />} />
+          <Route path={LoginPageRoute.navigateTo} element={<Login />} />
+        </Route>
+
       </Routes>
     </BrowserRouter>
   );
