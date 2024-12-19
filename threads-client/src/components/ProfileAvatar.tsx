@@ -9,7 +9,7 @@ const ProfileAvatar = ({ProfileImageUrl}: Props) => {
     return (
         <>
             <Avatar>
-                <AvatarImage src={ProfileImageUrl} />
+                <AvatarImage src={ProfileImageUrl}  />
                 <AvatarFallback>CN</AvatarFallback>
             </Avatar>
         </>
