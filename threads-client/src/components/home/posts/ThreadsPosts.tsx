@@ -4,7 +4,7 @@ import {
     PostHeader,
 } from "@/components/home/index";
 
-type Props = {};
+
 
 const ThreadsPosts = (props: Props) => {
     return (

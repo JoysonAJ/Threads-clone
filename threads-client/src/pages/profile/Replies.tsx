@@ -1,8 +1,11 @@
+import { Comments } from '@/components/home'
 import React from 'react'
 
 const Replies = () => {
   return (
-    <div>Replies</div>
+    <div className='flex justify-center items-center'>
+      <Comments />
+    </div>
   )
 }
 

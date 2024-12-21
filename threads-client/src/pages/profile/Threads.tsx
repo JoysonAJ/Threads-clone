@@ -1,8 +1,11 @@
+import { ThreadsPosts } from '@/components'
 import React from 'react'
 
 const Threads = () => {
   return (
-    <div>Threads</div>
+    <div className='flex justify-center items-center'>
+      <ThreadsPosts />
+    </div>
   )
 }
 
