@@ -22,3 +22,6 @@ export const registerRoute = routePathSetter('/register','register')
 export const threadsRoute = routePathSetter('/threads','threads')
 export const repliesRoute = routePathSetter('/replies','replies')
 export const repostRoute = routePathSetter('/repost','repost')
+
+
+export const SinglePostRoute = routePathSetter('/post','single-post')

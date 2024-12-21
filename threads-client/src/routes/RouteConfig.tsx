@@ -11,6 +11,7 @@ import {
     Replies,
     Repost,
     Threads,
+    SinglePost
 } from "@/pages";
 import { BrowserRouter, Routes, Route } from "react-router";
 import {
@@ -23,6 +24,7 @@ import {
     repliesRoute,
     repostRoute,
     threadsRoute,
+    SinglePostRoute
 } from "@/routes/route.path";
 
 const RouteConfig = () => {
@@ -38,6 +40,10 @@ const RouteConfig = () => {
                     <Route
                         path={SearchPageRoute.navigateTo}
                         element={<Search />}
+                    />
+
+                    <Route path={`${SinglePostRoute.navigateTo}/:id`} 
+                    element={<SinglePost />}
                     />
 
                     <Route path={MenuPageRoute.navigateTo} element={<Menu />} />
