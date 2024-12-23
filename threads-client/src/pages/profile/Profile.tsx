@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { InstagramIcon } from "@/helpers/icons";
 import { NavLink } from "react-router";
 
-import { threadsRoute, repliesRoute, repostRoute } from "@/routes/route.path";
+import { threadsRoute, repliesRoute, repostRoute, ProfilePageRoute } from "@/routes/route.path";
 
 const Profile = () => {
   return (
@@ -75,13 +75,13 @@ function ProfileNavigation() {
   const id = "id";
   return (
     <div className="flex flex-row justify-around">
-      <NavLink to={`${threadsRoute.navigateTo}/${id}`} className={({isActive})=>`capitalize   w-1/3 text-center py-2 ${isActive && 'border-b-2 border-gray-500 '} `}>
+      <NavLink to={`${ProfilePageRoute.navigateTo}/${threadsRoute.navigateTo}/${id}`} className={({isActive})=>`capitalize   w-1/3 text-center py-2 ${isActive && 'border-b-2 border-gray-500 '} `}>
         {threadsRoute.displayName}
       </NavLink>
-      <NavLink to={`${repliesRoute.navigateTo}/${id}`} className={({isActive})=>`capitalize   w-1/3 text-center py-2 ${isActive && 'border-b-2 border-gray-500 '} `}>
+      <NavLink to={`${ProfilePageRoute.navigateTo}/${repliesRoute.navigateTo}/${id}`} className={({isActive})=>`capitalize   w-1/3 text-center py-2 ${isActive && 'border-b-2 border-gray-500 '} `}>
         {repliesRoute.displayName}
       </NavLink>
-      <NavLink to={`${repostRoute.navigateTo}/${id}`} className={({isActive})=>`capitalize   w-1/3 text-center py-2 ${isActive && 'border-b-2 border-gray-500 '} `}>
+      <NavLink to={`${ProfilePageRoute.navigateTo}/${repostRoute.navigateTo}/${id}`} className={({isActive})=>`capitalize   w-1/3 text-center py-2 ${isActive && 'border-b-2 border-gray-500 '} `}>
         {repostRoute.displayName}
       </NavLink>
     </div>

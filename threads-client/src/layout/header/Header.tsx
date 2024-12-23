@@ -13,7 +13,7 @@ import { MenuIcon } from "@/routes/routes.icons";
 // Main Header component
 const Header = () => {
   return (
-    <header>
+    <header className="shadow-sm shadow-gray-500 w-full fixed top-0 z-50 bg-white block ">
       <Navbar /> {/* Rendering the Navbar component */}
     </header>
   );
@@ -24,27 +24,26 @@ export default Header; // Exporting the Header component
 // Navbar component for the navigation bar
 function Navbar() {
   return (
-    <nav className="shadow-sm shadow-gray-500"> {/* Navigation bar with shadow */}
-      <div className="container mx-auto px-4 py-1 flex justify-between items-center">
-        <NavAppIcon /> {/* Application logo */}
+    <nav className="container mx-auto px-4 py-1 flex justify-between items-center max-sm:px-0"> {/* Navigation bar with shadow */}
+    
+        <NavAppIcon /> 
         <NavListItems /> {/* Navigation list items */}
         <NavToggleMenu /> {/* Menu toggle icon for mobile view */}
-      </div>
     </nav>
   );
 }
 
-// Component for the application logo
 function NavAppIcon() {
   return (
     <NavLink
       to={HomePageRoute.navigateTo} // Link to the home page
-      className="max-sm:hidden flex items-center" // Hide on small screens
+      className="flex max-sm:hidden" // Hide on larger screens, show on small screens
     >
       <img
         src={ThreadsLogoBlack} // Logo image source
         alt="no image found" // Alt text for the image
-        className="max-sm:h-9 max-sm:w-9 h-12 w-12" // Responsive sizing for the logo
+        className="max-sm:h-9 max-sm:w-9 h-12 w-12 " // Responsive sizing for the logo
+        // className="h-40 w-40 " // Responsive sizing for the logo
       />
     </NavLink>
   );
@@ -54,7 +53,7 @@ function NavAppIcon() {
 function NavListItems() {
   const navItemsArr = [HomePageRoute, ProfilePageRoute, SearchPageRoute]; // Array of navigation items
   return (
-    <div className="flex flex-row items-center space-x-4 bg-gray-100 px-10 rounded-sm">
+    <div className=" flex justify-between w-1/4 max-sm:w-full">
       {navItemsArr.map((navItem, index) => (
         <NavLink
           to={`${navItem.navigateTo}`} // Link to the respective route
@@ -76,7 +75,7 @@ function NavListItems() {
   // Component for rendering navigation icons
   function NavIcons({ Icon, displayName }: NavIconProps) {
     if (Icon) {
-      return <Icon className="h-14 w-10 mx-2" />; // Render the icon if it exists
+      return <Icon className="h-14 w-10 mx-2 " />; // Render the icon if it exists
     }
     return <span>{displayName}</span>; // Otherwise, render the display name
   }
@@ -85,8 +84,8 @@ function NavListItems() {
 // Component for the menu toggle icon (for mobile view)
 function NavToggleMenu() {
   return (
-    <div className="max-sm:hidden"> {/* Hide on small screens */}
-      <MenuIcon className="h-8 w-8 mr-10" /> {/* Render the menu icon */}
+    <div className=""> {/* Hide on small screens */}
+      <MenuIcon className="h-8 w-8 mr-10 flex max-sm:hidden" /> {/* Render the menu icon */}
     </div>
   );
 }

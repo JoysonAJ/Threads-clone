@@ -18,7 +18,7 @@ function BackgroundImage({ children }: { children: ReactNode }) {
     <div className="relative flex items-center justify-center min-h-screen bg-cover bg-center">
       {/* Container for the background image */}
       <div 
-        className="absolute inset-0 bg-cover bg-center h-80 w-screen object-contain" 
+        className="absolute inset-0 bg-cover bg-center h-80 w-screen object-contain max-sm:hidden" 
         style={{ 
           backgroundImage: `url('/public/register-bg.webp')` // Setting the background image
         }}

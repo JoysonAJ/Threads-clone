@@ -6,6 +6,10 @@ const Home = () => {
       <div  className="w-10/12 shadow-sm shadow-gray-200 rounded-md">
         <NewPostThread />
         <ThreadsPosts />
+        <ThreadsPosts />
+        <ThreadsPosts />
+        <ThreadsPosts />
+        <ThreadsPosts />
       </div>
       
     </div>
