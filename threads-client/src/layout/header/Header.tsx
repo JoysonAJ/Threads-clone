@@ -2,11 +2,11 @@ import {
   HomePageRoute,
   ProfilePageRoute,
   SearchPageRoute,
+  wishListRoute,
 } from "@/routes/route.path";
 import { NavLink } from "react-router";
 import { routeIcon, routeDisplayName } from "@/types/route";
 import ThreadsLogoBlack from "../../../public/Threads-logo-black-bg.webp";
-import { DropdownMenu } from "@/components/ui/dropdown-menu";
 
 import { MenuIcon } from "@/routes/routes.icons";
 
@@ -24,11 +24,12 @@ export default Header; // Exporting the Header component
 // Navbar component for the navigation bar
 function Navbar() {
   return (
-    <nav className="container mx-auto px-4 py-1 flex justify-between items-center max-sm:px-0"> {/* Navigation bar with shadow */}
-    
-        <NavAppIcon /> 
-        <NavListItems /> {/* Navigation list items */}
-        <NavToggleMenu /> {/* Menu toggle icon for mobile view */}
+    <nav className="container mx-auto px-4 py-1 flex justify-between items-center max-sm:px-0">
+      {" "}
+      {/* Navigation bar with shadow */}
+      <NavAppIcon />
+      <NavListItems /> {/* Navigation list items */}
+      <NavToggleMenu /> {/* Menu toggle icon for mobile view */}
     </nav>
   );
 }
@@ -51,7 +52,12 @@ function NavAppIcon() {
 
 // Component for the navigation list items
 function NavListItems() {
-  const navItemsArr = [HomePageRoute, ProfilePageRoute, SearchPageRoute]; // Array of navigation items
+  const navItemsArr = [
+    HomePageRoute,
+    SearchPageRoute,
+    wishListRoute,
+    ProfilePageRoute,
+  ]; // Array of navigation items
   return (
     <div className=" flex justify-between w-1/4 max-sm:w-full">
       {navItemsArr.map((navItem, index) => (
@@ -60,7 +66,8 @@ function NavListItems() {
           className="capitalize" // Capitalize the text
           key={index} // Unique key for each item
         >
-          <NavIcons displayName={navItem.displayName} Icon={navItem.icon} /> {/* Render navigation icons */}
+          <NavIcons displayName={navItem.displayName} Icon={navItem.icon} />{" "}
+          {/* Render navigation icons */}
         </NavLink>
       ))}
     </div>
@@ -75,7 +82,7 @@ function NavListItems() {
   // Component for rendering navigation icons
   function NavIcons({ Icon, displayName }: NavIconProps) {
     if (Icon) {
-      return <Icon className="h-14 w-10 mx-2 " />; // Render the icon if it exists
+      return <Icon className="h-14 w-10 mx-2 object-contain" />; // Render the icon if it exists
     }
     return <span>{displayName}</span>; // Otherwise, render the display name
   }
@@ -84,8 +91,11 @@ function NavListItems() {
 // Component for the menu toggle icon (for mobile view)
 function NavToggleMenu() {
   return (
-    <div className=""> {/* Hide on small screens */}
-      <MenuIcon className="h-8 w-8 mr-10 flex max-sm:hidden" /> {/* Render the menu icon */}
+    <div className="">
+      {" "}
+      {/* Hide on small screens */}
+      <MenuIcon className="h-8 w-8 mr-10 flex max-sm:hidden" />{" "}
+      {/* Render the menu icon */}
     </div>
   );
 }

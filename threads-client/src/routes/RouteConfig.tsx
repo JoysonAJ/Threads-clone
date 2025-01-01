@@ -3,7 +3,6 @@ import Layout from "@/layout";
 import { AuthLayout, ProfileLayout } from "@/layout";
 import {
   Home,
-  Profile,
   Search,
   Menu,
   Login,
@@ -12,6 +11,7 @@ import {
   Repost,
   Threads,
   SinglePost,
+  WishList,
 } from "@/pages";
 import { BrowserRouter, Routes, Route } from "react-router";
 import {
@@ -25,6 +25,7 @@ import {
   repostRoute,
   threadsRoute,
   SinglePostRoute,
+  wishListRoute
 } from "@/routes/route.path";
 
 const RouteConfig = () => {
@@ -51,11 +52,8 @@ const RouteConfig = () => {
           </Route>
 
           <Route path={HomePageRoute.navigateTo} element={<Home />} />
-          {/* <Route
-                        path={ProfilePageRoute.navigateTo}
-                        element={<Profile />}
-                    /> */}
           <Route path={SearchPageRoute.navigateTo} element={<Search />} />
+          <Route path={wishListRoute.navigateTo} element={<WishList />} />
 
           <Route
             path={`${SinglePostRoute.navigateTo}/:id`}

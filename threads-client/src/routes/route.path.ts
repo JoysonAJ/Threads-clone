@@ -11,6 +11,7 @@ import {
 export const HomePageRoute = routePathSetter("/", "home",HomeIcon);
 export const ProfilePageRoute = routePathSetter("/profile", "profile",ProfileIcon);
 export const SearchPageRoute = routePathSetter("/search", "search",SearchIcon);
+export const wishListRoute = routePathSetter('/like','wishlist',HeartIcon)
 
 
 export const MenuPageRoute = routePathSetter('/menu','menu',MenuIcon) 
