@@ -239,3 +239,75 @@ export const getProfileUserDetails = async (req, res) => {
   }
 };
 
+
+
+/**
+ * Allows a user to follow or unfollow another user based on their ID.
+ *
+ * @async
+ * @function followTheUser
+ * @param {Object} req - The request object from the client, containing user information and parameters.
+ * @param {Object} res - The response object to send data back to the client.
+ * @throws {ApiError} Throws an error if the user ID is not provided, if the user does not exist, or if any other error occurs.
+ * @returns {Promise<void>} Sends a JSON response indicating the follow/unfollow status.
+ */
+export const followTheUser = async (req, res) => {
+  try {
+    const { id } = req.params; // Extracting the user ID from the request parameters
+
+    // Check if the user ID is provided
+    if (!id) {
+      throw new ApiError(400, "Id is required !"); // Throwing an error if ID is not provided
+    }
+
+    // Checking if the user exists in the database
+    const userExists = await User.findById(id);
+    if (!userExists) {
+      throw new ApiError(400, "User  don't Exist !"); // Throwing an error if the user does not exist
+    }
+
+    // Check if the current user is already following the target user
+    if (userExists.followers.includes(req.user._id)) {
+      // If already following, unfollow the user
+      await User.findByIdAndUpdate(
+        userExists._id,
+        {
+          $pull: { followers: req.user._id }, // Remove the current user's ID from the followers array
+        },
+        { new: true } // Return the updated document
+      );
+
+      // Sending a response indicating the user has been unfollowed
+      return res.status(201).json(
+        new ApiResponse(
+          201,
+          { user: req.user },
+          `Unfollowed ${userExists.userName}` // Message indicating unfollow action
+        )
+      );
+    }
+
+    // If not following, follow the user
+    await User.findByIdAndUpdate(
+      userExists._id,
+      {
+        $push: { followers: req.user._id }, // Add the current user's ID to the followers array
+      },
+      { new: true } // Return the updated document
+    );
+
+    // Sending a response indicating the user is now being followed
+    return res.status(201).json(
+      new ApiResponse(
+        201,
+        { user: req.user },
+        `Following ${userExists.userName}` // Message indicating follow action
+      )
+    );
+  } catch (error) {
+    // Handling errors and sending an appropriate response
+    return res
+      .status(error.statusCode)
+      .send(new ApiError(error.statusCode, error.message));
+  }
+};
