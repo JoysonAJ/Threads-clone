@@ -106,23 +106,20 @@ export const signInUserController = async (req, res) => {
   }
 };
 
-
-
-
 /**
  * Controller for logging in a user.
- * 
+ *
  * This function handles the user login process, including validation of input fields,
  * checking for existing users, verifying the password, and generating an access token.
  * It also sets a cookie with the access token for session management.
- * 
+ *
  * @async
  * @function logInUserController
  * @param {Object} req - The request object containing user input data.
  * @param {Object} res - The response object used to send responses to the client.
  * @returns {Promise<Object>} - Returns a response object with the status and user data
  *                              or an error message.
- * 
+ *
  * @throws {ApiError} - Throws an ApiError if any validation fails or if there are issues
  *                      during user authentication or token generation.
  */
@@ -136,16 +133,16 @@ export const logInUserController = async (req, res) => {
     }
 
     // Check if the user exists in the database
-    const existedUser  = await User.findOne({ email });
+    const existedUser = await User.findOne({ email });
 
-    if (!existedUser ) {
+    if (!existedUser) {
       throw new ApiError(400, "Please Signin first !");
     }
 
     // Compare the provided password with the stored hashed password
     const passwordMatched = await bcrypt.compare(
       password,
-      existedUser .password
+      existedUser.password
     );
 
     if (!passwordMatched) {
@@ -154,7 +151,7 @@ export const logInUserController = async (req, res) => {
 
     // Generate an access token for the user
     const accessToken = jwt.sign(
-      { token: existedUser ._id },
+      { token: existedUser._id },
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "30d" }
     );
@@ -173,7 +170,7 @@ export const logInUserController = async (req, res) => {
     };
 
     // Retrieve the logged-in user without the password and refresh token
-    const loggedInUser  = await User.findById(existedUser ._id).select(
+    const loggedInUser = await User.findById(existedUser._id).select(
       "-password -refreshToken"
     );
 
@@ -184,14 +181,58 @@ export const logInUserController = async (req, res) => {
       .json(
         new ApiResponse(
           200,
-          { user: loggedInUser  },
+          { user: loggedInUser },
           "User  logged in successfully !"
         )
       );
   } catch (error) {
-    console.log('ERROR ___', error);
-    
+    console.log("ERROR ___", error);
+
     // Send error response if any exception occurs
+    return res
+      .status(error.statusCode)
+      .send(new ApiError(error.statusCode, error.message));
+  }
+};
+
+/**
+ * Retrieves the profile details of a user by their ID.
+ *
+ * @async
+ * @function getProfileUserDetails
+ * @param {Object} req - The request object from the client.
+ * @param {Object} res - The response object to send data back to the client.
+ * @throws {ApiError} Throws an error if the user ID is not provided or if an error occurs during the database query.
+ * @returns {Promise<void>} Sends a JSON response containing the user details or an error message.
+ */
+
+export const getProfileUserDetails = async (req, res) => {
+  try {
+    const { id } = req.params; // Extracting the user ID from the request parameters
+    if (!id) {
+      throw new ApiError(400, "id is required !"); // Throwing an error if ID is not provided
+    }
+
+    // Fetching user details from the database, excluding the password and populating related fields
+    const user = await User.findById(id)
+      .select("-password") // Exclude the password field from the result
+      .populate("followers") // Populate the followers field
+      .populate({
+        path: "threads", // Populate threads with likes, comments, and admin details
+        populate: [{ path: "likes" }, { path: "comments" }, { path: "admin" }],
+      })
+      .populate({ path: "replies", populate: { path: "admin" } }) // Populate replies with admin details
+      .populate({
+        path: "reposts", // Populate reposts with likes, comments, and admin details
+        populate: [{ path: "likes" }, { path: "comments" }, { path: "admin" }],
+      });
+
+    // Sending a successful response with the user details
+    res
+      .status(200)
+      .json(new ApiResponse(200, { user }, "User  Details Fetched !"));
+  } catch (error) {
+    // Handling errors and sending an appropriate response
     return res
       .status(error.statusCode)
       .send(new ApiError(error.statusCode, error.message));
