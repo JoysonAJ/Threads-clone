@@ -29,7 +29,7 @@ const userSchema = new Schema(
     public_id: {
       type: String,
     },
-    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     threads: [{ type: mongoose.Schema.Types.ObjectId, ref: "post" }],
     replies: [{ type: mongoose.Schema.Types.ObjectId, ref: "comment" }],
     reposts: [{ type: mongoose.Schema.Types.ObjectId, ref: "post" }],
@@ -53,6 +53,6 @@ userSchema.methods.generateAccessToken = function(){
 }
 
 
-export const User = mongoose.model("User", userSchema);
+export const User = mongoose.model("user", userSchema);
 
 

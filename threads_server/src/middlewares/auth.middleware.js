@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 export const verifyJWT = async (req, res, next) => {
   
   try {
-    const token = req.cookies.token;
+    const token = req.cookies.accessToken;
     
     if (!token) {
       throw new ApiError(400, "No token in auth !");
