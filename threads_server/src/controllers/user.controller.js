@@ -3,6 +3,26 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import {
+  removeFromCloudinary,
+  uploadOnCloudinary,
+} from "../utils/cloudinary.js";
+
+const generateAccessToken = async (userId) => {
+  try {
+    const user = await User.findById(userId);
+    const accessToken = user.generateAccessToken();
+
+    return accessToken;
+  } catch (error) {
+    console.error("\n\n\n\n", error, "\n\n\n\n");
+
+    throw new ApiError(
+      500,
+      "Something went wrong while generating refresh and access token"
+    );
+  }
+};
 
 /**
  * Controller for signing in a user.
@@ -64,13 +84,7 @@ export const signInUserController = async (req, res) => {
     }
 
     // Generate an access token for the user
-    const accessToken = jwt.sign(
-      { token: result._id },
-      process.env.ACCESS_TOKEN_SECRET,
-      {
-        expiresIn: "30d",
-      }
-    );
+    const accessToken = await generateAccessToken(result._id);
 
     if (!accessToken) {
       throw new ApiError(400, "Error while generating token !");
@@ -100,6 +114,8 @@ export const signInUserController = async (req, res) => {
         )
       );
   } catch (error) {
+    console.log(error);
+
     return res
       .status(error.statusCode)
       .send(new ApiError(error.statusCode, error.message));
@@ -150,11 +166,7 @@ export const logInUserController = async (req, res) => {
     }
 
     // Generate an access token for the user
-    const accessToken = jwt.sign(
-      { token: existedUser._id },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "30d" }
-    );
+    const accessToken = await generateAccessToken(existedUser._id);
 
     if (!accessToken) {
       throw new ApiError(400, "Token not generated in login!");
@@ -239,8 +251,6 @@ export const getProfileUserDetails = async (req, res) => {
   }
 };
 
-
-
 /**
  * Allows a user to follow or unfollow another user based on their ID.
  *
@@ -311,3 +321,139 @@ export const followTheUser = async (req, res) => {
       .send(new ApiError(error.statusCode, error.message));
   }
 };
+
+export const updateUserProfile = async (req, res) => {
+  try {
+    const formFields = req.formFields; //this is text field
+    const formFiles = req.formFiles; //this file
+
+    if (!formFields) {
+      throw new ApiError(400, "Bio text can not be empty");
+    }
+
+    if (!formFiles) {
+      throw new ApiError(400, "profile pic is required !");
+    }
+
+    // Now upload the image to cloundinary
+
+    // step1 get uer from mongoDb
+    const userExists = await User.findById(req.user._id);
+
+    if (!userExists) {
+      return new ApiError(400, "No such user !");
+    }
+
+    // now check if the user is already having image then remove the image from the cloudinary
+    if (userExists.public_id) {
+      await removeFromCloudinary(userExists);
+    }
+
+    // now upload the image to cloudinary for now
+    console.log(formFiles.profileImage[0].filepath);
+
+    const filePath = formFiles.profileImage[0].filepath;
+
+    const uploadFile = await uploadOnCloudinary(filePath);
+    console.log("upload on cloundinary", uploadFile);
+
+    if (!uploadFile || !uploadFile.url) {
+      throw new ApiError(400, "Error while uploading on avatar");
+    }
+
+    await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $set: {
+          profilePic: uploadedImage.secure_url,
+          public_id: uploadedImage.public_id,
+          bio: fields.bio,
+        },
+      },
+      { new: true }
+    );
+
+    return res.status(201).json(
+      new ApiResponse(
+        201,
+        {},
+        `user Proifle update works fine ` // Message indicating follow action
+      )
+    );
+  } catch (error) {
+    console.log(error);
+
+    return res
+      .status(error.statusCode)
+      .send(new ApiError(error.statusCode, error.message));
+  }
+};
+
+export const searchUser = async (req, res) => {
+  try {
+    const { query } = req.params;
+
+    const users = await User.find({
+      $or: [
+        { userName: { $regex: query, $options: "i" } },
+        { email: { $regex: query, $options: "i" } },
+      ],
+    });
+
+    return res.status(201).json(
+      new ApiResponse(
+        201,
+        { users },
+        `user search result` // Message indicating follow action
+      )
+    );
+  } catch (error) {
+    return res
+      .status(error.statusCode)
+      .send(new ApiError(error.statusCode, error.message));
+  }
+};
+
+export const logoutUser = async (req, res) => {
+  try {
+
+
+    // Set cookie options for the access token
+    const cookieOptions = {
+      maxAge: 0, // 30 days
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      partitioned: true,
+    };
+
+    return res
+      .status(200)
+      .cookie("token", "", cookieOptions)
+      .json(
+        new ApiResponse(
+          200,
+          { },
+          "User logged out successfully !"
+        )
+      );
+
+  } catch (error) {
+    return res
+      .status(error.statusCode)
+      .send(new ApiError(error.statusCode, error.message));
+  }
+};
+
+export const myInfo = async(req,res)=>{
+  try {
+    const user = req.user
+    res
+      .status(200)
+      .json(new ApiResponse(200, { user }, "My information !"));
+  } catch (error) {
+    return res
+      .status(error.statusCode)
+      .send(new ApiError(error.statusCode, error.message));
+  }
+}
