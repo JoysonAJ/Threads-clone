@@ -22,7 +22,7 @@ import {
   LoginPageRoute,
   registerRoute,
   repliesRoute,
-  repostRoute,
+  rePostRoute,
   threadsRoute,
   SinglePostRoute,
   wishListRoute
@@ -46,7 +46,7 @@ const RouteConfig = () => {
               element={<Threads />}
             />
             <Route
-              path={`${repostRoute.navigateTo}/:id`}
+              path={`${rePostRoute.navigateTo}/:id`}
               element={<Repost />}
             />
           </Route>

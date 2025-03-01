@@ -9,6 +9,18 @@ import { routeIcon, routeDisplayName } from "@/types/route";
 import ThreadsLogoBlack from "../../../public/Threads-logo-black-bg.webp";
 
 import { MenuIcon } from "@/routes/routes.icons";
+import { WriteTweet } from "@/helpers/icons";
+import { useAppDispatch } from "@/store";
+import { addPostModal } from "@/redux/service.slice";
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarShortcut,
+  MenubarTrigger,
+} from "@/components/ui/menubar";
 
 // Main Header component
 const Header = () => {
@@ -25,7 +37,6 @@ export default Header; // Exporting the Header component
 function Navbar() {
   return (
     <nav className="container mx-auto px-4 py-1 flex justify-between items-center max-sm:px-0">
-      {" "}
       {/* Navigation bar with shadow */}
       <NavAppIcon />
       <NavListItems /> {/* Navigation list items */}
@@ -59,16 +70,19 @@ function NavListItems() {
     ProfilePageRoute,
   ]; // Array of navigation items
   return (
-    <div className=" flex justify-between w-1/4 max-sm:w-full">
+    <div className=" flex justify-between w-1/4 max-sm:w-full ">
       {navItemsArr.map((navItem, index) => (
-        <NavLink
-          to={`${navItem.navigateTo}`} // Link to the respective route
-          className="capitalize" // Capitalize the text
-          key={index} // Unique key for each item
-        >
-          <NavIcons displayName={navItem.displayName} Icon={navItem.icon} />{" "}
-          {/* Render navigation icons */}
-        </NavLink>
+        <>
+          {index === 2 && <AddPostIcon />}
+          <NavLink
+            to={`${navItem.navigateTo}`} // Link to the respective route
+            className="capitalize" // Capitalize the text
+            key={index} // Unique key for each item
+          >
+            <NavIcons displayName={navItem.displayName} Icon={navItem.icon} />{" "}
+            {/* Render navigation icons */}
+          </NavLink>
+        </>
       ))}
     </div>
   );
@@ -91,11 +105,35 @@ function NavListItems() {
 // Component for the menu toggle icon (for mobile view)
 function NavToggleMenu() {
   return (
-    <div className="">
-      {" "}
-      {/* Hide on small screens */}
-      <MenuIcon className="h-8 w-8 mr-10 flex max-sm:hidden" />{" "}
-      {/* Render the menu icon */}
-    </div>
+    <Menubar className="border-none shadow-none ">
+      <MenubarMenu>
+        <MenubarTrigger className="border-none cursor-pointer ">
+          <MenuIcon className="h-8 w-8 mr-10 flex max-sm:hidden" />
+        </MenubarTrigger>
+
+        <MenubarContent>
+          <MenubarItem>Toggle Menu</MenubarItem>
+          <MenubarItem>My Profile</MenubarItem>
+          <MenubarSeparator />
+          <MenubarItem>Logout</MenubarItem>
+          <MenubarSeparator />
+        </MenubarContent>
+      </MenubarMenu>
+    </Menubar>
   );
+}
+
+function AddPostIcon() {
+  const dispatch = useAppDispatch();
+  return (
+    <>
+      <WriteTweet
+        className="h-14 w-10 mx-2 object-contain cursor-pointer"
+        onClick={onClickPostModal}
+      />
+    </>
+  );
+  function onClickPostModal() {
+    dispatch(addPostModal(true));
+  }
 }
