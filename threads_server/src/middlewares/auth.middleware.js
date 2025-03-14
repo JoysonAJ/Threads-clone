@@ -17,7 +17,7 @@ export const verifyJWT = async (req, res, next) => {
       throw new ApiError(400, "Error while decoding token in auth !");
     }
     
-    const user = await User.findById(decodedToken._id)
+    const user = await User.findById(decodedToken._id).select("-password")
     // .populate("followers")  
     // .populate("threads")
     // .populate("replies")

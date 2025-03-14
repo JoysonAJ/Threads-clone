@@ -6,7 +6,8 @@ import {
   getProfileUserDetails,
   updateUserProfile,
   searchUser,
-  logoutUser
+  logoutUser,
+  myInfo
 } from "../controllers/user.controller.js";
 
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -18,6 +19,7 @@ router.route("/signin").post(signInUserController);
 router.route("/login").post(logInUserController);
 router.route("/update-profile").post(verifyJWT,formidableAuth,updateUserProfile)
 router.route("/search/:query").post(verifyJWT,searchUser)
+router.route("/me").get(verifyJWT,myInfo)
 router.route("/logout").post(verifyJWT,logoutUser)
 
 export default router;

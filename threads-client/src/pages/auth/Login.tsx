@@ -14,6 +14,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router";
 import { registerRoute } from "@/routes/route.path";
+import { useLoginMutation } from "@/redux/api/service.api";
+import { useEffect } from "react";
 
 function Login() {
   const form = useForm<z.infer<typeof loginFormSchema>>({
@@ -24,12 +26,18 @@ function Login() {
     },
   });
 
+  const [logInUser, logInUserStatus] = useLoginMutation();
+  const { isSuccess, data } = logInUserStatus;
+
+  useEffect(() => {
+    console.log("Result", data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess]);
+
   return (
     <div className="flex items-center justify-center min-h-screen  ">
       <div className="rounded-lg shadow-md  w-96 border-2 border-gray-900 p-4">
-        <h2 className="text-2xl font-bold mb-6 text-center">
-          Login
-        </h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -67,17 +75,36 @@ function Login() {
         </Form>
 
         <div className="text-center py-4">
-          New to our platform? <Link to={registerRoute.navigateTo} className="text-blue-500">Register</Link>
+          New to our platform?{" "}
+          <Link to={registerRoute.navigateTo} className="text-blue-500">
+            Register
+          </Link>
         </div>
       </div>
     </div>
   );
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof loginFormSchema>) {
+  async function onSubmit(values: z.infer<typeof loginFormSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    try {
+      const { email, password } = values;
+      await logInUser({ email, password });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        // Handle validation errors (e.g., display error messages)
+        console.error("Validation errors:", error.errors);
+        // You can access error.errors to display specific error messages
+        // Example:
+        error.errors.forEach((err) => {
+          console.log(`${err.path.join(".")}: ${err.message}`);
+        });
+      } else {
+        // Handle other errors
+        console.error("An error occurred:", error);
+      }
+    }
   }
 }
 

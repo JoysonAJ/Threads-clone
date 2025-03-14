@@ -28,7 +28,14 @@ import {
   wishListRoute
 } from "@/routes/route.path";
 
+import { useMyInfoQuery } from "@/redux/api/service.api";
+
 const RouteConfig = () => {
+  const data = useMyInfoQuery({})
+
+  console.log(data);
+  
+
   return (
     <BrowserRouter>
       <Routes>

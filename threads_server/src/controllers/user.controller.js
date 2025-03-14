@@ -448,6 +448,8 @@ export const logoutUser = async (req, res) => {
 export const myInfo = async(req,res)=>{
   try {
     const user = req.user
+    console.log(user);
+    
     res
       .status(200)
       .json(new ApiResponse(200, { user }, "My information !"));

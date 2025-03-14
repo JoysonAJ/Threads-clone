@@ -18,9 +18,11 @@ import {
   MenubarItem,
   MenubarMenu,
   MenubarSeparator,
-  MenubarShortcut,
   MenubarTrigger,
 } from "@/components/ui/menubar";
+
+import { useLogoutMeMutation } from "@/redux/api/service.api";
+import { useEffect } from "react";
 
 // Main Header component
 const Header = () => {
@@ -104,6 +106,38 @@ function NavListItems() {
 
 // Component for the menu toggle icon (for mobile view)
 function NavToggleMenu() {
+
+  const [logoutMe, logoutMeData] = useLogoutMeMutation();
+
+  
+
+  useEffect(() => {
+    if (logoutMeData.isSuccess) {
+      // toast.warning(logoutMeData.data.msg, {
+      //   position: "top-center",
+      //   autoClose: 2500,
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   theme: "colored",
+      //   transition: Bounce,
+      // });
+    }
+    // if (logoutMeData.isError) {
+    //   toast.error(logoutMeData.error.data.msg, {
+    //     position: "top-center",
+    //     autoClose: 2500,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     theme: "colored",
+    //     transition: Bounce,
+    //   });
+    // }
+  }, [logoutMeData.isSuccess, logoutMeData.isError]);
+  
   return (
     <Menubar className="border-none shadow-none ">
       <MenubarMenu>
@@ -115,12 +149,23 @@ function NavToggleMenu() {
           <MenubarItem>Toggle Menu</MenubarItem>
           <MenubarItem>My Profile</MenubarItem>
           <MenubarSeparator />
-          <MenubarItem>Logout</MenubarItem>
+          <MenubarItem onClick={onPressLogout}>Logout</MenubarItem>
           <MenubarSeparator />
         </MenubarContent>
       </MenubarMenu>
     </Menubar>
   );
+
+  async function onPressLogout(){
+      console.log('logout is clicked');
+   try {
+      await logoutMe({})
+   } catch (error) {
+      console.log('Error in logout',error);
+   }
+  
+    
+  }
 }
 
 function AddPostIcon() {

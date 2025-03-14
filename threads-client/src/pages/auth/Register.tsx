@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,6 +14,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router";
 import { LoginPageRoute } from "@/routes/route.path";
+import { useSigninMutation } from "@/redux/api/service.api"
+import { useEffect } from "react";
 
 function Register() {
   // Setting up the form using React Hook Form with Zod validation
@@ -27,6 +28,16 @@ function Register() {
       confirmPassword: "", // Default value for confirm password
     },
   });
+
+  const [signInUser,signInUserStatus] = useSigninMutation()
+
+  const {isSuccess,data} = signInUserStatus
+
+  useEffect(() => {
+    console.log('Result',data);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess])
+  
 
   return (
     <div className="flex items-center justify-center min-h-screen ">
@@ -75,7 +86,7 @@ function Register() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter the password" {...field} />
+                    <Input placeholder="Enter the password" {...field}  type="password"/>
                   </FormControl>
                   <FormMessage /> {/* Displays validation messages */}
                 </FormItem>
@@ -89,7 +100,7 @@ function Register() {
                 <FormItem>
                   <FormLabel>Confirm Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="Confirm your password" {...field} />
+                    <Input placeholder="Confirm your password" {...field} type="password" />
                   </FormControl>
                   <FormMessage /> {/* Displays validation messages */}
                 </FormItem>
@@ -111,10 +122,30 @@ function Register() {
   );
 
   // Submit handler for the form
-  function onSubmit(values: z.infer<typeof registerFormSchema>) {
+  async function onSubmit(values: z.infer<typeof registerFormSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values); // Logging the form values to the console
+   
+    
+    try {
+      const {email,fullName:userName,password} = values
+
+      await signInUser({email,password,userName})
+      
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        // Handle validation errors (e.g., display error messages)
+        console.error("Validation errors:", error.errors);
+        // You can access error.errors to display specific error messages
+        // Example:
+        error.errors.forEach((err) => {
+          console.log(`${err.path.join('.')}: ${err.message}`);
+        });
+      } else {
+        // Handle other errors
+        console.error("An error occurred:", error);
+      }
+    }
   }
 }
 
